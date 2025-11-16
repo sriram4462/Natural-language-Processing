@@ -333,37 +333,3 @@ plt.legend()
 plt.grid(alpha=0.3)
 plt.tight_layout()
 plt.show()
-
-# ==============================
-# 11. Optional – Binned confusion-style matrix for Ridge
-# ==============================
-# This is not a true confusion matrix (regression problem),
-# but a binned version to visualise under- / over-estimation.
-bins = np.linspace(0, 1, 6)  # 5 bins: [0–0.2, 0.2–0.4, ...]
-true_bins = np.digitize(y_val, bins) - 1
-pred_bins = np.digitize(pred_rdg, bins) - 1
-
-num_bins = len(bins) - 1
-cm = np.zeros((num_bins, num_bins), dtype=int)
-for t, p in zip(true_bins, pred_bins):
-    if 0 <= t < num_bins and 0 <= p < num_bins:
-        cm[t, p] += 1
-
-fig, ax = plt.subplots(figsize=(6, 5))
-im = ax.imshow(cm, cmap="Blues")
-ax.set_xticks(range(num_bins))
-ax.set_yticks(range(num_bins))
-labels = [f"{bins[i]:.1f}-{bins[i+1]:.1f}" for i in range(num_bins)]
-ax.set_xticklabels(labels, rotation=45, ha="right")
-ax.set_yticklabels(labels)
-ax.set_xlabel("Predicted Complexity Range")
-ax.set_ylabel("True Complexity Range")
-ax.set_title("Binned Confusion Matrix (Ridge, 5 bins)")
-
-for i in range(num_bins):
-    for j in range(num_bins):
-        ax.text(j, i, cm[i, j], ha="center", va="center", color="black")
-
-fig.colorbar(im)
-fig.tight_layout()
-plt.show()
